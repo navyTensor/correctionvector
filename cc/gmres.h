@@ -141,8 +141,6 @@ gmres(BigMatrixT const& A,
     //for(auto& el : H) el = NAN;                                   // Initialise to NAN in case something bad happens
 
     // Construct the Q matrix. where each "column" holds a Tensor
-    // Note: I would normally construct this from the Vector class, but ITensor doesn't have it's vector templated,
-    // it's fixed to be either real (Vector) or complex (CVector). Annoying af tbh, but STL is fine anyway.
     std::vector<Tensor> Q(max_krylov_size+1);
     
     // Store the frobenius norm of the rhs vector (never changes)
@@ -157,7 +155,7 @@ gmres(BigMatrixT const& A,
         auto beta = norm(r);          // store the frobenius norm of the first guess
    
         // Check residual, maybe our guess was already correct
-        if(b_norm == Approx0) b_norm = 1.0;
+        if(b_norm <= Approx0) b_norm = 1.0;
         residual = beta / b_norm;
         if(residual <= threshold)
         {
